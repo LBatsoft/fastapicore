@@ -1,0 +1,4 @@
+sudo docker exec -it fastapi-core aerich init -t src.config.tortoise_conf.TORTOISE_ORM
+sudo docker exec -it fastapi-core aerich init-db
+sudo docker exec -it fastapi-core aerich migrate
+sudo docker exec -it fastapi-core aerich upgrade
