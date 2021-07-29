@@ -29,25 +29,3 @@ TORTOISE_ORM = {
         }
     },
 }
-# db_config = {
-#     "connections": {
-#         "default": {
-#             "engine": "tortoise.backends.asyncpg",
-#             "credentials": {
-#                 "database": 'fastapicore',
-#                 "host": 'postgresdb',
-#                 "password": 'newpassword',
-#                 "port": '5432',
-#                 "user": 'sakthi',
-#             },
-#         }
-#     },
-#     "apps": {
-#         "models": {
-#             "models": settings.APPS_MODELS,
-#             "default_connection": "default",
-#         }
-#
-#     },
-#
-# }

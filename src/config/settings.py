@@ -1,17 +1,17 @@
 import os
 
-PROJECT_NAME = "UseFul"
+PROJECT_NAME = "FastAPICORE"
 SERVER_HOST = os.environ.get("SERVER_HOST")
 
 # Secret key
-SECRET_KEY = b"awubsyb872378t^*TG8y68&*&&*8y8yg9POB)*896ft7CR^56dfYUv"
+SECRET_KEY = "5994f0aa99574b68fb9ba9582758eca935ba7ce3"
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 API_V1_STR = "/api/v1"
 
-# Token 60 minutes * 24 hours * 8 days = 8 days
-ACCESS_TOKEN_EXPIRE_MINUTES = 160 * 24 * 7
+# Token EXPIRES AFTER !% DAYS
+ACCESS_TOKEN_EXPIRE_DAYS = 15
 
 # CORS
 BACKEND_CORS_ORIGINS = [
@@ -24,7 +24,7 @@ BACKEND_CORS_ORIGINS = [
 DATABASE_URI = f'postgres://{os.environ.get("POSTGRES_USER")}:' \
                f'{os.environ.get("POSTGRES_PASSWORD")}@' \
                f'{os.environ.get("POSTGRES_HOST")}:5432/' \
-               f'{os.environ.get("POSTGRES_DB")}'
+               f'{os.environ.get("POSTGRES_DBNAME")}'
 
 USERS_OPEN_REGISTRATION = True
 

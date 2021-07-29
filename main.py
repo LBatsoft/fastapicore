@@ -4,20 +4,23 @@ from tortoise.contrib import fastapi
 # from starlette.middleware.sessions import SessionMiddleware
 from tortoise.contrib.fastapi import register_tortoise
 from tortoise.contrib.fastapi import HTTPNotFoundError, register_tortoise
-
-
+from src.config.tortoise_conf import TORTOISE_ORM as db_config
 from src.config import settings
-# from src.app import routers
+from src.apps import routers
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 import logging
 fastapi.logging = logging.getLogger('uvicorn')
-
 app = FastAPI(
-    title="Useful",
-    description="Author - DJWOMS",
-    version="0.2.0",
+    title="Core",
+    description="FastAPI Core",
+    version="0.1.0",
 )
-
-
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.add_middleware(
+    TrustedHostMiddleware, allowed_hosts=["192.168.29.98",'localhost','127.0.0.1']
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.BACKEND_CORS_ORIGINS,
@@ -26,30 +29,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+db_config["generate_schemas"]=False
+db_config["add_exception_handlers"]=True
+
 # app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
-# app.include_router(routers.api_router, prefix=settings.API_V1_STR)
-db_config = {
-    "connections": {
-        "default": {
-            "engine": "tortoise.backends.asyncpg",
-            "credentials": {
-                "database": 'fastapicore',
-                "host": 'postgresdb',
-                "password": 'newpassword',
-                "port": '5432',
-                "user": 'sakthi',
-            },
-        }
-    },
-    "apps": {
-        "models": {
-            "models": settings.APPS_MODELS,
-            "default_connection": "default",
-        }
+app.include_router(routers.api_router, prefix=settings.API_V1_STR)
 
-    },
-    "generate_schemas":False,
-    "add_exception_handlers":True,
-}
 
-register_tortoise(app, config=db_config)
+# register_tortoise(app, config=db_config)
+register_tortoise(
+    app,
+    db_url=settings.DATABASE_URI,
+    modules={"models": settings.APPS_MODELS},
+    generate_schemas=False,
+    add_exception_handlers=True,
+)

@@ -23,7 +23,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - "8001:5000"
+      - "8001:8000"
     restart: always
     depends_on:
       - postgresdb
