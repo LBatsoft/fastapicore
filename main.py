@@ -11,6 +11,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 import logging
+from src.config.mongo_conf import virtual_client,local_client
+
 fastapi.logging = logging.getLogger('uvicorn')
 app = FastAPI(
     title="Core",
@@ -18,8 +20,10 @@ app = FastAPI(
     version="0.1.0",
 )
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/media", StaticFiles(directory="media"), name="media")
 app.add_middleware(
-    TrustedHostMiddleware, allowed_hosts=["192.168.29.98",'localhost','127.0.0.1']
+    TrustedHostMiddleware, allowed_hosts=[
+        "192.168.29.98", '192.168.29.12', '192.168.29.242', 'localhost', '127.0.0.1']
 )
 app.add_middleware(
     CORSMiddleware,
@@ -28,6 +32,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("shutdown")
+async def shutdown_db_client():
+    virtual_client.close()
+    local_client.close()
+    
+
+@app.on_event("startup")
+async def shutdown_db_client():
+    virtual_client.close()
+    local_client.close()
+    
+
 
 db_config["generate_schemas"]=False
 db_config["add_exception_handlers"]=True
