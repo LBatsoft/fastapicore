@@ -19,6 +19,7 @@ def create_token(user_id: int):
 
 def create_access_token(*, data: dict, expires_delta: timedelta = None):
     """Создание токена"""
+    # to_encode = data.copy()
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
